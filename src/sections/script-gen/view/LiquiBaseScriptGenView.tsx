@@ -1,6 +1,14 @@
 import { useState } from 'react';
+import { varAlpha } from 'minimal-shared/utils';
 
-import { Box, Button, TextField, CircularProgress } from '@mui/material';
+import {
+  Box,
+  useTheme,
+  IconButton,
+  Typography,
+  OutlinedInput,
+  InputAdornment,
+} from '@mui/material';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import { renderIcon } from 'src/layouts/nav-config-dashboard';
@@ -10,6 +18,9 @@ import CodeDisplay from '../components/CodeDisplay';
 const LiquiBaseScriptGenView = () => {
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [generatedLiquibase, setGeneratedLiquibase] = useState<string | null>(null);
+  const [promptString, setPromptString] = useState<string>('');
+
+  const theme = useTheme();
 
   const handleGenerateLiquibase = () => {
     // if (!jiraId) return;
@@ -42,65 +53,85 @@ const LiquiBaseScriptGenView = () => {
     }, 2000);
   };
 
+  const handlePromptChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPromptString(event.target.value);
+  };
+
+  const hasPrompt = promptString.trim().length > 0;
+
   return (
     <DashboardContent>
-      <Box className="h-full flex flex-col">
-        <Box className="mb-6">
-          <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-1">
-            {renderIcon('navbar/script-gen', 'h-4 w-4')}
-            Liquibase Script Generator
-          </h2>
-          <p className="text-gray-600 mt-1">
-            Auto-generate compliant Liquibase changeSets with built-in rollback logic.
-          </p>
-        </Box>
-
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 mb-6 flex space-x-4 items-end">
-          <div className="flex-1">
-            <div className="relative">
-              <TextField
-                fullWidth
-                placeholder="e.g. PLAT-1044"
-                variant="outlined"
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    '&.Mui-focused fieldset': {
-                      borderColor: 'primary.main',
-                    },
-                  },
-                }}
-              />
-            </div>
+      <Box
+        className="h-full flex flex-col"
+        sx={{
+          position: 'relative',
+          zIndex: 1,
+        }}
+      >
+        <div className="flex mb-6 items-center-safe gap-2">
+          {renderIcon('navbar/script-gen', 'h-7 w-7', { color: 'primary.main' })}
+          <div className="flex flex-col items-start">
+            <Typography variant="h3" className="text-3xl text-gray-800">
+              Liquibase Script Generator
+            </Typography>
+            <Typography variant="body1">
+              Auto-generate compliant Liquibase changeSets with built-in rollback logic.
+            </Typography>
           </div>
-          <Button
-            onClick={handleGenerateLiquibase}
-            // disabled={!jiraId || isGenerating}
-            variant="outlined"
-            color="primary"
-            sx={{
-              backgroundColor: '#fff',
-              textTransform: 'none',
-              fontWeight: 500,
-              px: 3,
-              mb: 1,
-              py: 1,
-              '&:hover': {
-                backgroundColor: 'rgba(0, 0, 0, 0.04)',
-              },
-            }}
-            startIcon={
-              isGenerating ? (
-                <CircularProgress size={18} color="primary" />
-              ) : (
-                renderIcon('navbar/cip-gen')
-              )
-            }
-          >
-            {isGenerating ? 'Parsing Schema...' : 'Generate Script'}
-          </Button>
         </div>
 
-        {generatedLiquibase && <CodeDisplay generatedLiquibase={generatedLiquibase} />}
+        <div className="flex flex-col items-center justify-center space-y-4 h-[75dvh]">
+          <OutlinedInput
+            name="script-generator-prompt"
+            onChange={handlePromptChange}
+            value={promptString}
+            placeholder="Generate a Liquibase changeSet for adding a new column to the users table ...."
+            className="rounded-full ps-2 shadow-sm shadow-red-100"
+            sx={{
+              width: { xs: '100%', sm: hasPrompt ? '80%' : 700 },
+              maxWidth: '100%',
+              padding: 0,
+              paddingRight: '10px',
+              backgroundColor: varAlpha(theme.palette.common.whiteChannel, 0.72),
+              backdropFilter: 'blur(12px)',
+              border: `1px solid ${varAlpha(theme.palette.common.whiteChannel, 0.55)}`,
+              transition: theme.transitions.create(['width', 'transform', 'box-shadow'], {
+                duration: theme.transitions.duration.shorter,
+              }),
+
+              '&.Mui-focused': {
+                width: { xs: '100%', sm: '80%' },
+                borderColor: varAlpha(theme.palette.primary.mainChannel, 0.2),
+                borderWidth: '0.1px',
+                boxShadow: `0 10px 30px ${varAlpha(theme.palette.primary.mainChannel, 0.12)}`,
+                transform: 'translateY(-1px)',
+              },
+            }}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={handleGenerateLiquibase}
+                  color="primary"
+                  className="hover:scale-110 transition-transform"
+                  sx={[
+                    (localTheme) => ({
+                      backgroundColor: localTheme.palette.primary.main,
+                      ':hover': {
+                        backgroundColor: localTheme.palette.primary.main,
+                      },
+                      textTransform: 'none',
+                      color: localTheme.palette.primary.contrastText,
+                    }),
+                  ]}
+                >
+                  {isGenerating ? renderIcon('navbar/loading') : renderIcon('navbar/cip-gen')}
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+
+          {generatedLiquibase && <CodeDisplay generatedLiquibase={generatedLiquibase} />}
+        </div>
       </Box>
     </DashboardContent>
   );

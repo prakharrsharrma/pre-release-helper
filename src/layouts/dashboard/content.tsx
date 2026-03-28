@@ -1,7 +1,7 @@
 import type { Breakpoint } from '@mui/material/styles';
 import type { ContainerProps } from '@mui/material/Container';
 
-import { mergeClasses } from 'minimal-shared/utils';
+import { varAlpha, mergeClasses } from 'minimal-shared/utils';
 
 import Container from '@mui/material/Container';
 
@@ -30,6 +30,22 @@ export function DashboardContent({
       sx={[
         (theme) => ({
           display: 'flex',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            inset: 0,
+            pointerEvents: 'none',
+            backgroundImage: `radial-gradient(circle, ${varAlpha(theme.palette.primary.mainChannel, 0.16)} 1px, transparent 1.2px)`,
+            backgroundSize: '18px 18px',
+            opacity: 0.9,
+          },
+          '&::after': {
+            content: '""',
+            position: 'absolute',
+            inset: 0,
+            pointerEvents: 'none',
+            background: `radial-gradient(circle at 55% 50%, ${varAlpha(theme.palette.primary.mainChannel, 0.08)}, transparent 50%), linear-gradient(180deg, ${varAlpha(theme.palette.common.whiteChannel, 0.24)} 0%, transparent 45%)`,
+          },
           flex: '1 1 auto',
           flexDirection: 'column',
           pt: 'var(--layout-dashboard-content-pt)',
