@@ -44,7 +44,7 @@ export function DashboardContent({
             position: 'absolute',
             inset: 0,
             pointerEvents: 'none',
-            background: `radial-gradient(circle at 55% 50%, ${varAlpha(theme.palette.primary.mainChannel, 0.08)}, transparent 50%), linear-gradient(180deg, ${varAlpha(theme.palette.common.whiteChannel, 0.24)} 0%, transparent 45%)`,
+            background: `radial-gradient(circle at 58% 50%, ${varAlpha(theme.palette.primary.mainChannel, 0.12)}, transparent 40%), linear-gradient(180deg, ${varAlpha(theme.palette.common.whiteChannel, 0.24)} 0%, transparent 45%)`,
           },
           flex: '1 1 auto',
           flexDirection: 'column',
