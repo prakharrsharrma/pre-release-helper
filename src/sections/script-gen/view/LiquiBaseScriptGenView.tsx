@@ -13,6 +13,8 @@ import {
 import { DashboardContent } from 'src/layouts/dashboard';
 import { renderIcon } from 'src/layouts/nav-config-dashboard';
 
+import Rotating from 'src/components/loaders/Rotating';
+
 import CodeDisplay from '../components/CodeDisplay';
 
 const LiquiBaseScriptGenView = () => {
@@ -124,7 +126,11 @@ const LiquiBaseScriptGenView = () => {
                     }),
                   ]}
                 >
-                  {isGenerating ? renderIcon('navbar/loading') : renderIcon('navbar/cip-gen')}
+                  {isGenerating ? (
+                    <Rotating>{renderIcon('common/ai')}</Rotating>
+                  ) : (
+                    renderIcon('navbar/cip-gen')
+                  )}
                 </IconButton>
               </InputAdornment>
             }
