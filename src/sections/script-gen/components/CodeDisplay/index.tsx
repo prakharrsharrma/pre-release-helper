@@ -2,14 +2,16 @@ import React from 'react';
 
 import { Box, Button } from '@mui/material';
 
+import { renderIcon } from 'src/layouts/nav-config-dashboard';
+
 const CodeDisplay = ({ generatedLiquibase }: { generatedLiquibase: string }) => (
   <Box className="flex-1 bg-gray-900 border border-gray-700 rounded-xl shadow-sm overflow-hidden flex flex-col">
     <div className="bg-gray-800 border-b border-gray-700 p-3 flex justify-between items-center">
       <div className="flex items-center space-x-2">
         <div className="flex space-x-1">
-          <div className="w-3 h-3 rounded-full bg-red-500" />
-          <div className="w-3 h-3 rounded-full bg-yellow-500" />
-          <div className="w-3 h-3 rounded-full bg-green-500" />
+          <div className="w-2 h-2 rounded-full bg-red-500" />
+          <div className="w-2 h-2 rounded-full bg-yellow-500" />
+          <div className="w-2 h-2 rounded-full bg-green-500" />
         </div>
         <span className="text-gray-400 text-sm font-mono ml-4">{11102}-changeset.xml</span>
       </div>
@@ -29,8 +31,9 @@ const CodeDisplay = ({ generatedLiquibase }: { generatedLiquibase: string }) => 
               backgroundColor: '#10b981', // emerald-500
             },
           }}
+          startIcon={renderIcon('common/copy')}
         >
-          Create PR
+          Copy Script
         </Button>
       </div>
     </div>

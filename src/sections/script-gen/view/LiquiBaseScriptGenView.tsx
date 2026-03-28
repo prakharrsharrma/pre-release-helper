@@ -1,8 +1,9 @@
 import { useState } from 'react';
 
-import { Box, Button, TextField, Typography, CircularProgress } from '@mui/material';
+import { Box, Button, TextField, CircularProgress } from '@mui/material';
 
 import { DashboardContent } from 'src/layouts/dashboard';
+import { renderIcon } from 'src/layouts/nav-config-dashboard';
 
 import CodeDisplay from '../components/CodeDisplay';
 
@@ -45,8 +46,8 @@ const LiquiBaseScriptGenView = () => {
     <DashboardContent>
       <Box className="h-full flex flex-col">
         <Box className="mb-6">
-          <h2 className="text-2xl font-bold text-gray-800 flex items-center">
-            {/* <Database className="mr-2 text-emerald-500" /> */}
+          <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-1">
+            {renderIcon('navbar/script-gen', 'h-4 w-4')}
             Liquibase Script Generator
           </h2>
           <p className="text-gray-600 mt-1">
@@ -56,13 +57,6 @@ const LiquiBaseScriptGenView = () => {
 
         <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 mb-6 flex space-x-4 items-end">
           <div className="flex-1">
-            <Typography
-              aria-label="jira-ticket"
-              variant="subtitle2"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Jira Story / Requirements Ticket
-            </Typography>
             <div className="relative">
               <TextField
                 fullWidth
@@ -98,7 +92,7 @@ const LiquiBaseScriptGenView = () => {
               isGenerating ? (
                 <CircularProgress size={18} color="primary" />
               ) : (
-                <div style={{ width: 20, height: 20 }} />
+                renderIcon('navbar/cip-gen')
               )
             }
           >

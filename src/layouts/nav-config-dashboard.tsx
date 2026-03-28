@@ -2,7 +2,10 @@ import { SvgColor } from 'src/components/svg-color';
 
 // ----------------------------------------------------------------------
 
-const icon = (name: string) => <SvgColor src={`/assets/icons/navbar/${name}.svg`} />;
+export const renderIcon = (
+  name: string,
+  className?: React.HTMLAttributes<HTMLSpanElement>['className']
+) => <SvgColor src={`/assets/icons/${name}.svg`} className={className ?? ''} />;
 
 export type NavItem = {
   title: string;
@@ -15,17 +18,17 @@ export const navData = [
   {
     title: 'Dashboard',
     path: '/',
-    icon: icon('dashboard'),
+    icon: renderIcon('navbar/dashboard'),
   },
   {
     title: 'CIP Generator',
     path: '/cip-generator',
-    icon: icon('cip-gen'),
+    icon: renderIcon('navbar/cip-gen'),
   },
 
   {
     title: 'Liquibase Script Generator',
     path: '/script-generator',
-    icon: icon('script-gen'),
+    icon: renderIcon('navbar/script-gen'),
   },
 ];
