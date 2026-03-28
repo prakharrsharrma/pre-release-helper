@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { varAlpha } from 'minimal-shared/utils';
 
 import {
   Box,
+  Skeleton,
   useTheme,
   IconButton,
   Typography,
@@ -19,15 +20,39 @@ import CodeDisplay from '../components/CodeDisplay';
 
 const LiquiBaseScriptGenView = () => {
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
-  const [generatedLiquibase, setGeneratedLiquibase] = useState<string | null>(null);
+  const [generatedLiquibase, setGeneratedLiquibase] = useState<string>('');
+  const [streamedLiquibase, setStreamedLiquibase] = useState<string>('');
   const [promptString, setPromptString] = useState<string>('');
 
   const theme = useTheme();
 
+  useEffect(() => {
+    if (!generatedLiquibase) {
+      setStreamedLiquibase('');
+      return undefined;
+    }
+
+    let currentIndex = 0;
+    const chunkSize = Math.max(8, Math.ceil(generatedLiquibase.length / 36));
+    const streamTimer = window.setInterval(() => {
+      currentIndex = Math.min(generatedLiquibase.length, currentIndex + chunkSize);
+      setStreamedLiquibase(generatedLiquibase.slice(0, currentIndex));
+
+      if (currentIndex >= generatedLiquibase.length) {
+        window.clearInterval(streamTimer);
+      }
+    }, 18);
+
+    return () => {
+      window.clearInterval(streamTimer);
+    };
+  }, [generatedLiquibase]);
+
   const handleGenerateLiquibase = () => {
     // if (!jiraId) return;
     setIsGenerating(true);
-    setGeneratedLiquibase(null);
+    setGeneratedLiquibase('');
+    setStreamedLiquibase('');
 
     setTimeout(() => {
       setGeneratedLiquibase(`<?xml version="1.0" encoding="UTF-8"?>
@@ -60,6 +85,11 @@ const LiquiBaseScriptGenView = () => {
   };
 
   const hasPrompt = promptString.trim().length > 0;
+  const showResponsePanel = isGenerating || Boolean(generatedLiquibase);
+  const visibleLiquibase =
+    streamedLiquibase.length < generatedLiquibase.length
+      ? `${streamedLiquibase}|`
+      : streamedLiquibase;
 
   return (
     <DashboardContent>
@@ -82,62 +112,140 @@ const LiquiBaseScriptGenView = () => {
           </div>
         </div>
 
-        <div className="flex flex-col items-center justify-center space-y-4 h-[75dvh]">
-          <OutlinedInput
-            name="script-generator-prompt"
-            onChange={handlePromptChange}
-            value={promptString}
-            placeholder="Generate a Liquibase changeSet for adding a new column to the users table ...."
-            className="rounded-full ps-2 shadow-sm shadow-red-100"
+        <Box
+          sx={{
+            position: 'relative',
+            height: '75dvh',
+            overflow: 'hidden',
+          }}
+        >
+          <Box
             sx={{
-              width: { xs: '100%', sm: hasPrompt ? '80%' : 700 },
-              maxWidth: '100%',
-              padding: 0,
-              paddingRight: '10px',
-              backgroundColor: varAlpha(theme.palette.common.whiteChannel, 0.72),
-              backdropFilter: 'blur(12px)',
-              border: `1px solid ${varAlpha(theme.palette.common.whiteChannel, 0.55)}`,
-              transition: theme.transitions.create(['width', 'transform', 'box-shadow'], {
-                duration: theme.transitions.duration.shorter,
+              position: 'absolute',
+              top: showResponsePanel ? 8 : '50%',
+              left: '50%',
+              width: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transform: showResponsePanel ? 'translate(-50%, 0)' : 'translate(-50%, -50%)',
+              transition: theme.transitions.create(['top', 'transform'], {
+                duration: theme.transitions.duration.enteringScreen,
+                easing: theme.transitions.easing.easeInOut,
               }),
-
-              '&.Mui-focused': {
-                width: { xs: '100%', sm: '80%' },
-                borderColor: varAlpha(theme.palette.primary.mainChannel, 0.2),
-                borderWidth: '0.1px',
-                boxShadow: `0 10px 30px ${varAlpha(theme.palette.primary.mainChannel, 0.12)}`,
-                transform: 'translateY(-1px)',
-              },
             }}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={handleGenerateLiquibase}
-                  color="primary"
-                  className="hover:scale-110 transition-transform"
-                  sx={[
-                    (localTheme) => ({
-                      backgroundColor: localTheme.palette.primary.main,
-                      ':hover': {
-                        backgroundColor: localTheme.palette.primary.main,
-                      },
-                      textTransform: 'none',
-                      color: localTheme.palette.primary.contrastText,
-                    }),
-                  ]}
-                >
-                  {isGenerating ? (
-                    <Rotating>{renderIcon('common/ai')}</Rotating>
-                  ) : (
-                    renderIcon('navbar/cip-gen')
-                  )}
-                </IconButton>
-              </InputAdornment>
-            }
-          />
+          >
+            <OutlinedInput
+              name="script-generator-prompt"
+              onChange={handlePromptChange}
+              value={promptString}
+              placeholder="Generate a Liquibase changeSet for adding a new column to the users table ...."
+              className="rounded-full ps-2"
+              sx={{
+                width: { xs: '100%', sm: hasPrompt ? '80%' : 700 },
+                maxWidth: '100%',
+                padding: 0,
+                paddingRight: '10px',
+                backgroundColor: varAlpha(theme.palette.common.whiteChannel, 0.72),
+                backdropFilter: 'blur(12px)',
+                // border: `1px solid ${varAlpha(theme.palette.common.whiteChannel, 0.55)}`,
+                transition: theme.transitions.create(['width', 'transform', 'box-shadow'], {
+                  duration: theme.transitions.duration.shorter,
+                }),
 
-          {generatedLiquibase && <CodeDisplay generatedLiquibase={generatedLiquibase} />}
-        </div>
+                '&.Mui-focused': {
+                  width: { xs: '100%', sm: '80%' },
+                  // borderColor: varAlpha(theme.palette.primary.mainChannel, 0.2),
+                  // borderWidth: '0.1px',
+                  boxShadow: `0 10px 30px ${varAlpha(theme.palette.primary.mainChannel, 0.12)}`,
+                  transform: 'translateY(-1px)',
+                },
+              }}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={handleGenerateLiquibase}
+                    color="primary"
+                    className="hover:scale-110 transition-transform"
+                    sx={[
+                      (localTheme) => ({
+                        backgroundColor: localTheme.palette.primary.main,
+                        ':hover': {
+                          backgroundColor: localTheme.palette.primary.main,
+                        },
+                        textTransform: 'none',
+                        color: localTheme.palette.primary.contrastText,
+                      }),
+                    ]}
+                  >
+                    {isGenerating ? (
+                      <Rotating>{renderIcon('common/ai')}</Rotating>
+                    ) : (
+                      renderIcon('navbar/cip-gen')
+                    )}
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+          </Box>
+
+          <Box
+            sx={{
+              position: 'absolute',
+              inset: 0,
+              top: { xs: 88, sm: 96 },
+              opacity: showResponsePanel ? 1 : 0,
+              transform: showResponsePanel ? 'translateY(0)' : 'translateY(24px)',
+              transition: theme.transitions.create(['opacity', 'transform'], {
+                duration: theme.transitions.duration.enteringScreen,
+                easing: theme.transitions.easing.easeInOut,
+              }),
+              pointerEvents: showResponsePanel ? 'auto' : 'none',
+            }}
+          >
+            {isGenerating ? (
+              <Box
+                sx={{
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 3,
+                  p: 3,
+                  borderRadius: 3,
+                  background: `linear-gradient(180deg, ${varAlpha(theme.palette.common.whiteChannel, 0.78)} 0%, ${varAlpha(theme.palette.common.whiteChannel, 0.62)} 100%)`,
+                  border: `1px solid ${varAlpha(theme.palette.common.whiteChannel, 0.55)}`,
+                  boxShadow: `0 20px 45px ${varAlpha(theme.palette.common.blackChannel, 0.12)}`,
+                  backdropFilter: 'blur(18px)',
+                }}
+              >
+                <div className="flex items-center gap-3">
+                  <Rotating>{renderIcon('common/ai')}</Rotating>
+                  <div>
+                    <Typography variant="subtitle1">Drafting Liquibase changeSet</Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Analyzing the schema update and assembling rollback steps.
+                    </Typography>
+                  </div>
+                </div>
+
+                <Box sx={{ display: 'grid', gap: 1.5 }}>
+                  <Skeleton animation="wave" variant="rounded" height={20} width="38%" />
+                  <Skeleton animation="wave" variant="rounded" height={20} width="72%" />
+                  <Skeleton animation="wave" variant="rounded" height={20} width="66%" />
+                  <Skeleton animation="wave" variant="rounded" height={20} width="48%" />
+                  <Skeleton animation="wave" variant="rounded" height={240} />
+                </Box>
+              </Box>
+            ) : (
+              generatedLiquibase && (
+                <Box sx={{ height: '100%', display: 'flex' }}>
+                  <CodeDisplay generatedLiquibase={visibleLiquibase} />
+                </Box>
+              )
+            )}
+          </Box>
+        </Box>
       </Box>
     </DashboardContent>
   );

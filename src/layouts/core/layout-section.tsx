@@ -49,14 +49,14 @@ export function LayoutSection({
             <LayoutSidebarContainer className={layoutClasses.sidebarContainer}>
               {headerSection}
               {children}
-              {footerSection}
+              {/* {footerSection} */}
             </LayoutSidebarContainer>
           </>
         ) : (
           <>
             {headerSection}
             {children}
-            {footerSection}
+            {/* {footerSection} */}
           </>
         )}
       </LayoutRoot>
