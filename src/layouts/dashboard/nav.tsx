@@ -6,13 +6,13 @@ import { varAlpha } from 'minimal-shared/utils';
 import Box from '@mui/material/Box';
 import ListItem from '@mui/material/ListItem';
 import { useTheme } from '@mui/material/styles';
+import { Divider, Typography } from '@mui/material';
 import ListItemButton from '@mui/material/ListItemButton';
 import Drawer, { drawerClasses } from '@mui/material/Drawer';
 
 import { usePathname } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
-import { Logo } from 'src/components/logo';
 import { Scrollbar } from 'src/components/scrollbar';
 
 import type { NavItem } from '../nav-config-dashboard';
@@ -38,7 +38,6 @@ export function NavDesktop({
   layoutQuery,
 }: NavContentProps & { layoutQuery: Breakpoint }) {
   const theme = useTheme();
-
   return (
     <Box
       sx={{
@@ -53,6 +52,7 @@ export function NavDesktop({
         zIndex: 'var(--layout-nav-zIndex)',
         width: 'var(--layout-nav-vertical-width)',
         borderRight: `1px solid ${varAlpha(theme.vars.palette.grey['500Channel'], 0.12)}`,
+        backgroundColor: theme.vars.palette.text.secondary,
         [theme.breakpoints.up(layoutQuery)]: {
           display: 'flex',
         },
@@ -109,7 +109,8 @@ export function NavContent({ data, slots, workspaces, sx }: NavContentProps) {
 
   return (
     <>
-      <Logo />
+      <Typography className="text-white font-bold text-2xl">Change Orchestrator</Typography>
+      <Divider className="mt-2 h-[0.5px] bg-gray-400" />
 
       {slots?.topArea}
 
@@ -134,6 +135,7 @@ export function NavContent({ data, slots, workspaces, sx }: NavContentProps) {
               display: 'flex',
               flexDirection: 'column',
             }}
+            className="gap-y-2"
           >
             {data.map((item) => {
               const isActived = item.path === pathname;
@@ -153,14 +155,14 @@ export function NavContent({ data, slots, workspaces, sx }: NavContentProps) {
                         borderRadius: 0.75,
                         typography: 'body2',
                         fontWeight: 'fontWeightMedium',
-                        color: theme.vars.palette.text.secondary,
+                        color: theme.vars.palette.primary.lighter,
                         minHeight: 44,
                         ...(isActived && {
                           fontWeight: 'fontWeightSemiBold',
-                          color: theme.vars.palette.primary.main,
-                          bgcolor: varAlpha(theme.vars.palette.primary.mainChannel, 0.08),
+                          color: theme.vars.palette.primary.light,
+                          bgcolor: theme.vars.palette.primary.lighter,
                           '&:hover': {
-                            bgcolor: varAlpha(theme.vars.palette.primary.mainChannel, 0.16),
+                            bgcolor: varAlpha(theme.vars.palette.primary.lighterChannel, 0.9),
                           },
                         }),
                       }),
