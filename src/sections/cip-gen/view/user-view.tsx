@@ -1,39 +1,108 @@
 import { useState, useCallback } from 'react';
 
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import { Box, Card, Grid, Divider, TextField, Typography, CardContent } from '@mui/material';
 
 import { DashboardContent } from 'src/layouts/dashboard';
+import { renderIcon } from 'src/layouts/nav-config-dashboard';
 
-import { Iconify } from 'src/components/iconify';
+import MultiSelector from '../component/MultiSelector';
 
 // ----------------------------------------------------------------------
 
+const options = ['1102', '1103', '1104', '1105'];
+
+const confluenceOption = ['112', '212', '232'];
+
 export function UserView() {
+  const [jiraTickets, setJiraTickets] = useState<Array<string>>([]);
+  const [confluence, setConfluence] = useState<Array<string>>([]);
   return (
     <DashboardContent>
+      {/* Header */}
       <Box
         sx={{
-          mb: 5,
+          mb: 4,
           display: 'flex',
           alignItems: 'center',
+          gap: 2,
         }}
       >
-        <Typography variant="h4" sx={{ flexGrow: 1 }}>
-          CIP Generator
-        </Typography>
-        <Button
-          variant="contained"
-          color="inherit"
-          startIcon={<Iconify icon="mingcute:add-line" />}
-        >
-          New user
-        </Button>
+        {renderIcon('navbar/script-gen', 'h-8 w-8', {
+          color: 'primary.main',
+        })}
+
+        <Box>
+          <Typography variant="h4" fontWeight={600}>
+            CIP Generator
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Automatically draft standardized Change Implementation Plans from Jira and Confluence
+            data.
+          </Typography>
+        </Box>
       </Box>
 
-      <Card />
+      {/* Main Card */}
+
+      <Card
+        elevation={2}
+        sx={{
+          borderRadius: 3,
+          p: 1,
+        }}
+      >
+        <CardContent sx={{ p: 4 }}>
+          {/* Header */}
+          <Box mb={4}>
+            <Typography variant="h5" fontWeight={600}>
+              CIP Inputs
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Select required Jira and Confluence references
+            </Typography>
+          </Box>
+
+          {/* Form Grid */}
+          <Grid container spacing={3}>
+            {/* Change Request Input */}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <TextField
+                fullWidth
+                label="Change Request"
+                placeholder="Enter Change Request ID"
+                variant="outlined"
+              />
+            </Grid>
+
+            {/* Divider */}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Divider />
+            </Grid>
+
+            {/* JIRA Selector */}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <MultiSelector
+                label="Select JIRA Ticket"
+                options={options}
+                value={jiraTickets}
+                onChange={setJiraTickets}
+                placeholder="Choose JIRA Ticket..."
+              />
+            </Grid>
+
+            {/* Confluence Selector */}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <MultiSelector
+                label="Select Confluence Id"
+                options={confluenceOption}
+                value={confluence}
+                onChange={setConfluence}
+                placeholder="Choose Confluence Id..."
+              />
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
     </DashboardContent>
   );
 }
