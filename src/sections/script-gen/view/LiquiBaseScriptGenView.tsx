@@ -213,6 +213,7 @@ const LiquiBaseScriptGenView = () => {
               <Box
                 sx={{
                   height: '100%',
+                  width: { xs: '100%', sm: '80%' },
                   display: 'flex',
                   flexDirection: 'column',
                   gap: 3,
@@ -254,7 +255,7 @@ const LiquiBaseScriptGenView = () => {
             ) : null}
 
             {!isGenerating && !generateLiquibaseError && generatedLiquibase ? (
-              <Box sx={{ height: '100%', display: 'flex' }}>
+              <Box sx={{ height: '100%', display: 'flex', width: { xs: '100%', sm: '80%' } }}>
                 <CodeDisplay generatedLiquibase={visibleLiquibase} />
               </Box>
             ) : null}

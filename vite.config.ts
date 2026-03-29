@@ -9,6 +9,7 @@ import tailwindcss from '@tailwindcss/vite';
 const PORT = 3000;
 
 export default defineConfig({
+  envPrefix: ['VITE_', 'ENABLE_'],
   plugins: [
     tailwindcss(),
     react(),
