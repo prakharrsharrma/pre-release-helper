@@ -6,6 +6,7 @@ import importPlugin from 'eslint-plugin-import';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import perfectionistPlugin from 'eslint-plugin-perfectionist';
 import unusedImportsPlugin from 'eslint-plugin-unused-imports';
+import tanstackQueryPlugin from '@tanstack/eslint-plugin-query';
 
 // ----------------------------------------------------------------------
 
@@ -190,5 +191,6 @@ export default [
   eslintJs.configs.recommended,
   ...eslintTs.configs.recommended,
   reactPlugin.configs.flat.recommended,
+  ...tanstackQueryPlugin.configs['flat/recommended'],
   customConfig,
 ];

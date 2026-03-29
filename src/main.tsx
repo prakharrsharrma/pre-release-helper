@@ -8,6 +8,7 @@ import { StyledEngineProvider } from '@mui/material/styles';
 import App from './app';
 import { routesSection } from './routes/sections';
 import { ErrorBoundary } from './routes/components';
+import { QueryProvider } from './providers/query-provider';
 
 // ----------------------------------------------------------------------
 
@@ -29,7 +30,9 @@ root.render(
   <StrictMode>
     <StyledEngineProvider enableCssLayer>
       <GlobalStyles styles="@layer theme, base, mui, components, utilities;" />
-      <RouterProvider router={router} />
+      <QueryProvider>
+        <RouterProvider router={router} />
+      </QueryProvider>
     </StyledEngineProvider>
   </StrictMode>
 );
