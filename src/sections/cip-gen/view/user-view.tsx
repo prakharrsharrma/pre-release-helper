@@ -1,6 +1,15 @@
 import { useState, useCallback } from 'react';
 
-import { Box, Card, Grid, Divider, TextField, Typography, CardContent } from '@mui/material';
+import {
+  Box,
+  Card,
+  Grid,
+  Button,
+  Divider,
+  TextField,
+  Typography,
+  CardContent,
+} from '@mui/material';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 import { renderIcon } from 'src/layouts/nav-config-dashboard';
@@ -14,8 +23,15 @@ const options = ['1102', '1103', '1104', '1105'];
 const confluenceOption = ['112', '212', '232'];
 
 export function UserView() {
+  const [changeRequest, setChangeRequest] = useState('');
+  const [isSearched, setIsSearched] = useState(false);
   const [jiraTickets, setJiraTickets] = useState<Array<string>>([]);
   const [confluence, setConfluence] = useState<Array<string>>([]);
+
+  const handleSearch = () => {
+    if (!changeRequest.trim()) return;
+    setIsSearched(true);
+  };
   return (
     <DashboardContent>
       {/* Header */}
@@ -64,42 +80,75 @@ export function UserView() {
 
           {/* Form Grid */}
           <Grid container spacing={3}>
-            {/* Change Request Input */}
-            <Grid size={{ xs: 12, md: 6 }}>
-              <TextField
-                fullWidth
-                label="Change Request"
-                placeholder="Enter Change Request ID"
-                variant="outlined"
-              />
+            {/* CR Input */}
+            <Grid size={{ xs: 12, md: 8 }}>
+              <Typography variant="h6" mb={2}>
+                Add Change Request
+              </Typography>
+
+              <Box
+                display="flex"
+                gap={2}
+                alignItems="center"
+                flexDirection={{ xs: 'column', sm: 'row' }}
+              >
+                <TextField
+                  fullWidth
+                  label="Change Request"
+                  placeholder="Enter Change Request ID (e.g. CR-1234)"
+                  value={changeRequest}
+                  onChange={(e) => setChangeRequest(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleSearch();
+                  }}
+                />
+
+                <Button
+                  variant="contained"
+                  onClick={handleSearch}
+                  disabled={!changeRequest}
+                  sx={{
+                    whiteSpace: 'nowrap',
+                    height: '56px',
+                    px: 3,
+                    textTransform: 'none',
+                    fontWeight: 500,
+                  }}
+                >
+                  Search
+                </Button>
+              </Box>
             </Grid>
 
-            {/* Divider */}
-            <Grid size={{ xs: 12, md: 6 }}>
-              <Divider />
-            </Grid>
+            {isSearched && (
+              <>
+                <Grid size={{ xs: 12 }} sx={{ mt: 2 }}>
+                  <Divider />
+                </Grid>
 
-            {/* JIRA Selector */}
-            <Grid size={{ xs: 12, md: 6 }}>
-              <MultiSelector
-                label="Select JIRA Ticket"
-                options={options}
-                value={jiraTickets}
-                onChange={setJiraTickets}
-                placeholder="Choose JIRA Ticket..."
-              />
-            </Grid>
+                {/* JIRA Selector */}
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <MultiSelector
+                    label="Select JIRA Ticket"
+                    options={options}
+                    value={jiraTickets}
+                    onChange={setJiraTickets}
+                    placeholder="Choose JIRA Ticket..."
+                  />
+                </Grid>
 
-            {/* Confluence Selector */}
-            <Grid size={{ xs: 12, md: 6 }}>
-              <MultiSelector
-                label="Select Confluence Id"
-                options={confluenceOption}
-                value={confluence}
-                onChange={setConfluence}
-                placeholder="Choose Confluence Id..."
-              />
-            </Grid>
+                {/* Confluence Selector */}
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <MultiSelector
+                    label="Select Confluence Id"
+                    options={confluenceOption}
+                    value={confluence}
+                    onChange={setConfluence}
+                    placeholder="Choose Confluence Id..."
+                  />
+                </Grid>
+              </>
+            )}
           </Grid>
         </CardContent>
       </Card>
