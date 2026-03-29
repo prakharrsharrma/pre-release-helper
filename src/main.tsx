@@ -6,8 +6,10 @@ import GlobalStyles from '@mui/material/GlobalStyles';
 import { StyledEngineProvider } from '@mui/material/styles';
 
 import App from './app';
+import { enableMocking } from './mocks';
 import { routesSection } from './routes/sections';
 import { ErrorBoundary } from './routes/components';
+import { QueryProvider } from './providers/query-provider';
 
 // ----------------------------------------------------------------------
 
@@ -23,13 +25,21 @@ const router = createBrowserRouter([
   },
 ]);
 
-const root = createRoot(document.getElementById('root')!);
+async function bootstrap() {
+  await enableMocking();
 
-root.render(
-  <StrictMode>
-    <StyledEngineProvider enableCssLayer>
-      <GlobalStyles styles="@layer theme, base, mui, components, utilities;" />
-      <RouterProvider router={router} />
-    </StyledEngineProvider>
-  </StrictMode>
-);
+  const root = createRoot(document.getElementById('root')!);
+
+  root.render(
+    <StrictMode>
+      <StyledEngineProvider enableCssLayer>
+        <GlobalStyles styles="@layer theme, base, mui, components, utilities;" />
+        <QueryProvider>
+          <RouterProvider router={router} />
+        </QueryProvider>
+      </StyledEngineProvider>
+    </StrictMode>
+  );
+}
+
+void bootstrap();
