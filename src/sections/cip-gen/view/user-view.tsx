@@ -14,6 +14,7 @@ import {
 import { DashboardContent } from 'src/layouts/dashboard';
 import { renderIcon } from 'src/layouts/nav-config-dashboard';
 
+import CIPPhases from '../component/CIPPhases';
 import MultiSelector from '../component/MultiSelector';
 
 // ----------------------------------------------------------------------
@@ -69,13 +70,32 @@ export function UserView() {
       >
         <CardContent sx={{ p: 4 }}>
           {/* Header */}
-          <Box mb={4}>
-            <Typography variant="h5" fontWeight={600}>
-              CIP Inputs
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Select required Jira and Confluence references
-            </Typography>
+
+          <Box className="flex justify-between items-center mb-4">
+            <Box>
+              <Typography variant="h5" fontWeight={600}>
+                CIP Inputs
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Select required Jira and Confluence references
+              </Typography>
+            </Box>
+
+            <Box>
+              <Button
+                variant="contained"
+                disabled
+                sx={{
+                  whiteSpace: 'nowrap',
+                  height: '56px',
+                  px: 3,
+                  textTransform: 'none',
+                  fontWeight: 500,
+                }}
+              >
+                Generate CIP
+              </Button>
+            </Box>
           </Box>
 
           {/* Form Grid */}
@@ -152,6 +172,10 @@ export function UserView() {
           </Grid>
         </CardContent>
       </Card>
+
+      <Box sx={{ mt: 4 }}>
+        <CIPPhases />
+      </Box>
     </DashboardContent>
   );
 }

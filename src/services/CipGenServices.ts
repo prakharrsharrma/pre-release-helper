@@ -1,5 +1,3 @@
-class CipGenServices{
-    
-}
+class CipGenServices {}
 
 export default new CipGenServices();

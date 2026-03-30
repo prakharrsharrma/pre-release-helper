@@ -10,44 +10,44 @@ const API_TIMEOUT = Number(import.meta.env.VITE_API_TIMEOUT ?? DEFAULT_TIMEOUT);
 let accessToken: string | null = null;
 
 const resolveTimeout = () =>
-	Number.isFinite(API_TIMEOUT) && API_TIMEOUT > 0 ? API_TIMEOUT : DEFAULT_TIMEOUT;
+  Number.isFinite(API_TIMEOUT) && API_TIMEOUT > 0 ? API_TIMEOUT : DEFAULT_TIMEOUT;
 
 const applyAccessToken = (config: InternalAxiosRequestConfig) => {
-	const headers = AxiosHeaders.from(config.headers);
+  const headers = AxiosHeaders.from(config.headers);
 
-	if (accessToken) {
-		headers.set('Authorization', `Bearer ${accessToken}`);
-	} else {
-		headers.delete('Authorization');
-	}
+  if (accessToken) {
+    headers.set('Authorization', `Bearer ${accessToken}`);
+  } else {
+    headers.delete('Authorization');
+  }
 
-	config.headers = headers;
+  config.headers = headers;
 
-	return config;
+  return config;
 };
 
 export const axiosInstance: AxiosInstance = axios.create({
-	baseURL: API_BASE_URL,
-	timeout: resolveTimeout(),
-	headers: {
-		Accept: 'application/json',
-		'Content-Type': 'application/json',
-	},
+  baseURL: API_BASE_URL,
+  timeout: resolveTimeout(),
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  },
 });
 
 axiosInstance.interceptors.request.use((config) => applyAccessToken(config));
 
 axiosInstance.interceptors.response.use(
-	(response) => response,
-	(error) => Promise.reject(error)
+  (response) => response,
+  (error) => Promise.reject(error)
 );
 
 export function setAccessToken(token: string | null) {
-	accessToken = token?.trim() || null;
+  accessToken = token?.trim() || null;
 }
 
 export function clearAccessToken() {
-	accessToken = null;
+  accessToken = null;
 }
 
 export default axiosInstance;
