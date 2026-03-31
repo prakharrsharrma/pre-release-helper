@@ -2,11 +2,25 @@ import { http, delay, HttpResponse } from 'msw';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL?.trim().replace(/\/$/, '');
 
-const SCRIPT_GENERATION_PATH = '/generate-script';
+const httpMethods = {
+  get: http.get,
+  post: http.post,
+  put: http.put,
+  patch: http.patch,
+  delete: http.delete,
+} as const;
 
-const scriptGenerationUrls = API_BASE_URL
-  ? [`${API_BASE_URL}${SCRIPT_GENERATION_PATH}`, SCRIPT_GENERATION_PATH]
-  : [SCRIPT_GENERATION_PATH];
+type HttpMethod = keyof typeof httpMethods;
+type RouteResolver = Parameters<typeof http.get>[1];
+
+type MockRoute = {
+  method: HttpMethod;
+  path: string;
+  resolver: RouteResolver;
+};
+
+const resolveRouteUrls = (path: string) =>
+  API_BASE_URL ? [`${API_BASE_URL}${path}`, path] : [path];
 
 const toChangeSetId = (prompt: string) =>
   prompt
@@ -30,22 +44,59 @@ const buildMockLiquibaseScript = (prompt: string) => {
   ].join('\n');
 };
 
-export const handlers = scriptGenerationUrls.map((url) =>
-  http.get(url, async ({ request }) => {
-    const requestUrl = new URL(request.url);
-    const prompt = requestUrl.searchParams.get('prompt')?.trim() ?? '';
+const routes: MockRoute[] = [
+  {
+    method: 'get',
+    path: '/generate-script',
+    resolver: async ({ request }) => {
+      const requestUrl = new URL(request.url);
+      const prompt = requestUrl.searchParams.get('prompt')?.trim() ?? '';
 
-    if (!prompt) {
-      return HttpResponse.json(
-        { message: 'A prompt is required to generate a Liquibase script.' },
-        { status: 400 }
-      );
-    }
+      if (!prompt) {
+        return HttpResponse.json(
+          { message: 'A prompt is required to generate a Liquibase script.' },
+          { status: 400 }
+        );
+      }
 
-    await delay(600);
+      await delay(600);
 
-    return HttpResponse.json({
-      script: buildMockLiquibaseScript(prompt),
-    });
-  })
-);
+      return HttpResponse.json({
+        script: buildMockLiquibaseScript(prompt),
+      });
+    },
+  },
+  {
+    method: 'get',
+    path: '/data/jira/available',
+    resolver: async () => {
+      await delay(250);
+
+      return HttpResponse.json({
+        tickets: ['REL-1024', 'REL-1031', 'OPS-88', 'DB-442'],
+      });
+    },
+  },
+  {
+    method: 'get',
+    path: '/data/confluence/available',
+    resolver: async () => {
+      await delay(250);
+
+      return HttpResponse.json({
+        pages: [
+          'Release Readiness Checklist',
+          'Database Migration Notes',
+          'Rollback Plan Draft',
+          'Production Validation Summary',
+        ],
+      });
+    },
+  },
+];
+
+export const handlers = routes.flatMap(({ method, path, resolver }) => {
+  const registerRoute = httpMethods[method];
+
+  return resolveRouteUrls(path).map((url) => registerRoute(url, resolver));
+});

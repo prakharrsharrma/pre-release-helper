@@ -1,8 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 
 import { Box, Paper, IconButton } from '@mui/material';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 type CarouselProps = {
   children: React.ReactNode;
@@ -64,9 +62,7 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
             borderRadius: '50%',
           }}
         >
-          <IconButton onClick={() => scroll('left')}>
-            <ChevronLeftIcon />
-          </IconButton>
+          <IconButton onClick={() => scroll('left')}>left</IconButton>
         </Paper>
       )}
 
@@ -99,9 +95,7 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
             borderRadius: '50%',
           }}
         >
-          <IconButton onClick={() => scroll('right')}>
-            <ChevronRightIcon />
-          </IconButton>
+          <IconButton onClick={() => scroll('right')}>right</IconButton>
         </Paper>
       )}
     </Box>

@@ -1,9 +1,5 @@
 import React, { useState } from 'react';
 
-import EditIcon from '@mui/icons-material/Edit';
-import SaveIcon from '@mui/icons-material/Check';
-import CancelIcon from '@mui/icons-material/Close';
-import DeleteIcon from '@mui/icons-material/Delete';
 import {
   Box,
   Card,
@@ -92,10 +88,10 @@ const StepCard: React.FC<Props> = ({ step, onChange }) => {
                       onChange={(e) => setTempValue(e.target.value)}
                     />
                     <IconButton onClick={() => handleSave(index)} size="small">
-                      <SaveIcon />
+                      save
                     </IconButton>
                     <IconButton onClick={handleCancel} size="small">
-                      <CancelIcon />
+                      cancel
                     </IconButton>
                   </>
                 ) : (
@@ -104,10 +100,10 @@ const StepCard: React.FC<Props> = ({ step, onChange }) => {
                       {index + 1}. {item}
                     </Typography>
                     <IconButton onClick={() => handleEdit(index)} size="small">
-                      <EditIcon />
+                      edit
                     </IconButton>
                     <IconButton onClick={() => handleDelete(index)} size="small">
-                      <DeleteIcon />
+                      delete
                     </IconButton>
                   </>
                 )}
