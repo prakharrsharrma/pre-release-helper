@@ -36,27 +36,27 @@ export const themeConfig: ThemeConfig = {
   /** **************************************
    * Palette
    *************************************** */
-palette: {
+  palette: {
     primary: {
       lighter: '#FDE8EB', // Very light tint for backgrounds/hover
-      light: '#F6758A',   // Lighter shade for secondary elements
-      main: '#ED1A3D',    // Official Singtel Red
-      dark: '#C11232',    // Darker red for hover states
-      darker: '#8E0B23',  // Deep red for contrast
+      light: '#F6758A', // Lighter shade for secondary elements
+      main: '#ED1A3D', // Official Singtel Red
+      dark: '#C11232', // Darker red for hover states
+      darker: '#8E0B23', // Deep red for contrast
       contrastText: '#FFFFFF',
     },
     secondary: {
       lighter: '#E6E7E8',
       light: '#939598',
-      main: '#333333',    // Dark charcoal used in typography/icons
-      dark: '#231F20',    // Near-black for headers
-      darker: '#000000',  // Pure black (Singtel wordmark color)
+      main: '#333333', // Dark charcoal used in typography/icons
+      dark: '#231F20', // Near-black for headers
+      darker: '#000000', // Pure black (Singtel wordmark color)
       contrastText: '#FFFFFF',
     },
     info: {
       lighter: '#D0ECFE',
       light: '#73BAFB',
-      main: '#1877F2',    // Standard digital blue for links/info
+      main: '#1877F2', // Standard digital blue for links/info
       dark: '#0C44AE',
       darker: '#042174',
       contrastText: '#FFFFFF',
@@ -64,7 +64,7 @@ palette: {
     success: {
       lighter: '#E8F5E9',
       light: '#81C784',
-      main: '#4CAF50',    // Green used for 'In Stock' or success alerts
+      main: '#4CAF50', // Green used for 'In Stock' or success alerts
       dark: '#388E3C',
       darker: '#1B5E20',
       contrastText: '#FFFFFF',
@@ -72,7 +72,7 @@ palette: {
     warning: {
       lighter: '#FFF9E6',
       light: '#FFE082',
-      main: '#FFB300',    // Amber for promotional 'Hot' tags
+      main: '#FFB300', // Amber for promotional 'Hot' tags
       dark: '#FFA000',
       darker: '#FF6F00',
       contrastText: '#1C252E',
@@ -80,7 +80,7 @@ palette: {
     error: {
       lighter: '#FEEBEE',
       light: '#EF9A9A',
-      main: '#D32F2F',    // Functional error red
+      main: '#D32F2F', // Functional error red
       dark: '#C62828',
       darker: '#B71C1C',
       contrastText: '#FFFFFF',

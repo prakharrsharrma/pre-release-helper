@@ -5,8 +5,8 @@ import { Box, Chip, TextField, Typography, Autocomplete } from '@mui/material';
 type MultiSelectorProps = {
   label?: string;
   options: string[];
-  value: string[];
-  onChange: (newValue: string[]) => void;
+  value?: string[];
+  onChange?: (newValue: string[]) => void;
   placeholder?: string;
 };
 
@@ -28,7 +28,7 @@ const MultiSelector: React.FC<MultiSelectorProps> = ({
       options={options}
       getOptionLabel={(option) => option}
       value={value}
-      onChange={(_, newValue) => onChange(newValue)}
+      onChange={(_, newValue) => onChange?.(newValue)}
       renderInput={(params) => (
         <TextField
           {...params}
@@ -44,20 +44,20 @@ const MultiSelector: React.FC<MultiSelectorProps> = ({
     />
 
     {/* Selected Items */}
-    {value.length > 0 && (
+    {!!value?.length && (
       <Box mt={3}>
         <Typography variant="subtitle2" mb={1} color="text.secondary">
           Selected Items
         </Typography>
 
         <Box display="flex" flexWrap="wrap" gap={1}>
-          {value.map((item) => (
+          {value?.map((item) => (
             <Chip
               key={item}
               label={item}
               color="primary"
               variant="outlined"
-              onDelete={() => onChange(value.filter((v) => v !== item))}
+              onDelete={() => onChange?.(value.filter((v) => v !== item))}
               sx={{
                 borderRadius: '6px',
               }}
