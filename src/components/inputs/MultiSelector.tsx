@@ -1,72 +1,75 @@
 import React from 'react';
+import { Controller, useFormContext, type FieldPath, type FieldValues } from 'react-hook-form';
 
-import { Box, Chip, TextField, Typography, Autocomplete } from '@mui/material';
+import { Box, Chip, TextField, Autocomplete } from '@mui/material';
 
-type MultiSelectorProps = {
-  label?: string;
+type MultiSelectorProps<TFieldValues extends FieldValues, TName extends FieldPath<TFieldValues>> = {
+  name: TName;
   options: string[];
-  value?: string[];
-  onChange?: (newValue: string[]) => void;
-  placeholder?: string;
+  label?: string;
 };
 
-const MultiSelector: React.FC<MultiSelectorProps> = ({
+const MultiSelector = <TFieldValues extends FieldValues, TName extends FieldPath<TFieldValues>>({
   label = 'Select Items',
   options,
-  value,
-  onChange,
-  placeholder = 'Select...',
-}) => (
-  <Box>
-    <Typography variant="h6" mb={2}>
-      {label}
-    </Typography>
+  name,
+}: MultiSelectorProps<TFieldValues, TName>) => {
+  const { control } = useFormContext<TFieldValues>();
 
-    {/* Multi Select */}
-    <Autocomplete
-      multiple
-      options={options}
-      getOptionLabel={(option) => option}
-      value={value}
-      onChange={(_, newValue) => onChange?.(newValue)}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          placeholder={placeholder}
-          sx={{
-            '& .MuiOutlinedInput-root': {
-              borderRadius: 2,
-            },
-          }}
-        />
-      )}
-      renderTags={() => null}
-    />
-
-    {/* Selected Items */}
-    {!!value?.length && (
-      <Box mt={3}>
-        <Typography variant="subtitle2" mb={1} color="text.secondary">
-          Selected Items
-        </Typography>
-
-        <Box display="flex" flexWrap="wrap" gap={1}>
-          {value?.map((item) => (
-            <Chip
-              key={item}
-              label={item}
-              color="primary"
-              variant="outlined"
-              onDelete={() => onChange?.(value.filter((v) => v !== item))}
-              sx={{
-                borderRadius: '6px',
-              }}
+  return (
+    <Controller
+      control={control}
+      name={name}
+      render={({ field }) => {
+        const selectedValues = Array.isArray(field.value) ? (field.value as string[]) : [];
+        return (
+          <>
+            <Autocomplete
+              multiple
+              options={options}
+              getOptionLabel={(option) => option}
+              value={selectedValues}
+              onChange={(_, newValue) => field.onChange(newValue)}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder={label}
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: 2,
+                    },
+                  }}
+                />
+              )}
+              renderTags={() => null}
             />
-          ))}
-        </Box>
-      </Box>
-    )}
-  </Box>
-);
+
+            {!!selectedValues.length && (
+              <Box mt={2}>
+                <Box display="flex" flexWrap="wrap" gap={1}>
+                  {selectedValues.map((item) => (
+                    <Chip
+                      className="rounded-full"
+                      key={item}
+                      label={item}
+                      color="primary"
+                      variant="outlined"
+                      onDelete={() =>
+                        field.onChange(selectedValues.filter((value) => value !== item))
+                      }
+                      sx={{
+                        borderRadius: '6px',
+                      }}
+                    />
+                  ))}
+                </Box>
+              </Box>
+            )}
+          </>
+        );
+      }}
+    />
+  );
+};
 
 export default MultiSelector;

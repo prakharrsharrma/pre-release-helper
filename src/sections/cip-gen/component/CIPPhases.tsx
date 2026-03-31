@@ -558,6 +558,7 @@ const CIPPhases: React.FC<{}> = () => {
               {data.steps.map((step, stepIdx) => (
                 <StepCard
                   key={step.stepNumber}
+                  phase={data.phaseName}
                   step={step}
                   onChange={(updated) => handleUpdate(phaseIdx, updated, stepIdx)}
                 />
