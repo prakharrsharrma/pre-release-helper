@@ -9,7 +9,8 @@ const MapUsersToPhases = () => {
   return (
     <>
       <Button
-        className="rounded-full px-4 py-1.5 shadow-inner"
+        fullWidth
+        className="rounded-2xl px-4 py-2 shadow-inner "
         variant="contained"
         color="info"
         onClick={() => setTriggerMappingModal((prev) => !prev)}

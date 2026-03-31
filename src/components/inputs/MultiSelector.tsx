@@ -36,7 +36,7 @@ const MultiSelector = <TFieldValues extends FieldValues, TName extends FieldPath
                   placeholder={label}
                   sx={{
                     '& .MuiOutlinedInput-root': {
-                      borderRadius: 200,
+                      borderRadius: 2,
                     },
                   }}
                 />

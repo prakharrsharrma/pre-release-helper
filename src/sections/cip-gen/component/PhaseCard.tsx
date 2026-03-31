@@ -11,6 +11,8 @@ import {
   CardContent,
 } from '@mui/material';
 
+import { PHASES_COLOR_MAP } from 'src/utils/constants';
+
 import StepDetailsDialog from './PhaseModal';
 
 type Step = {
@@ -23,9 +25,10 @@ type Step = {
 type Props = {
   step: Step;
   onChange: (updated: Step) => void;
+  phase: string;
 };
 
-const StepCard: React.FC<Props> = ({ step, onChange }) => {
+const StepCard: React.FC<Props> = ({ step, onChange, phase }) => {
   const [activities, setActivities] = useState(step.stepByStepActivities);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [tempValue, setTempValue] = useState('');
@@ -64,6 +67,8 @@ const StepCard: React.FC<Props> = ({ step, onChange }) => {
           maxWidth: 420,
           flexShrink: 0, // prevent shrinking in carousel
           borderRadius: 3,
+          border: '2px solid',
+          borderColor: PHASES_COLOR_MAP[phase.toUpperCase() as keyof typeof PHASES_COLOR_MAP], // 20 for transparency
         }}
       >
         <CardContent sx={{ p: 2 }}>
