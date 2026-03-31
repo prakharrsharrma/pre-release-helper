@@ -1,16 +1,11 @@
-export type CipTeamMemberLocation =
-  | 'PREPARATION'
-  | 'EXECUTION'
-  | 'GOLIVE'
-  | 'NOGO'
-  | 'POSTROLLBACK';
+export type TCipPhases = 'PREPARATION' | 'EXECUTION' | 'GOLIVE' | 'NOGO' | 'POSTROLLBACK';
 
 export type CipTeamMember = {
   name: string;
-  role: string;
+  role?: string;
   email: string;
-  contactNumbers: string;
-  location: CipTeamMemberLocation;
+  contactNumbers?: string;
+  location: TCipPhases;
 };
 
 export type CipGenFormValues = {

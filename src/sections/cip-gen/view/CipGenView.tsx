@@ -14,7 +14,43 @@ import type { CipGenFormValues } from '../types/cip-gen-form';
 
 const defaultValues: CipGenFormValues = {
   additionalNotes: '',
-  teamMembers: [],
+  teamMembers: [
+    {
+      name: '',
+      email: '',
+      contactNumbers: '',
+      role: '',
+      location: 'PREPARATION',
+    },
+    {
+      name: '',
+      email: '',
+      contactNumbers: '',
+      role: '',
+      location: 'EXECUTION',
+    },
+    {
+      name: '',
+      email: '',
+      contactNumbers: '',
+      role: '',
+      location: 'GOLIVE',
+    },
+    {
+      name: '',
+      email: '',
+      contactNumbers: '',
+      role: '',
+      location: 'NOGO',
+    },
+    {
+      name: '',
+      email: '',
+      contactNumbers: '',
+      role: '',
+      location: 'POSTROLLBACK',
+    },
+  ],
   plannedEndDate: '',
   plannedStartDate: '',
   environment: '',

@@ -73,7 +73,16 @@ const routes: MockRoute[] = [
       await delay(250);
 
       return HttpResponse.json({
-        tickets: ['REL-1024', 'REL-1031', 'OPS-88', 'DB-442'],
+        tickets: [
+          'GOMO-95',
+          'GOMO-96',
+          'GOMO-97',
+          'GOMO-98',
+          'GOMO-99',
+          'GOMO-100',
+          'GOMO-101',
+          'GOMO-102',
+        ],
       });
     },
   },
@@ -85,10 +94,13 @@ const routes: MockRoute[] = [
 
       return HttpResponse.json({
         pages: [
-          'Release Readiness Checklist',
-          'Database Migration Notes',
-          'Rollback Plan Draft',
-          'Production Validation Summary',
+          'CONF-2001',
+          'CONF-2002',
+          'CONF-2003',
+          'CONF-2004',
+          'CONF-2005',
+          'CONF-2006',
+          'CONF-2007',
         ],
       });
     },
