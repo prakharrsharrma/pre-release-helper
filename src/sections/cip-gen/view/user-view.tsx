@@ -1,39 +1,181 @@
 import { useState, useCallback } from 'react';
 
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import {
+  Box,
+  Card,
+  Grid,
+  Button,
+  Divider,
+  TextField,
+  Typography,
+  CardContent,
+} from '@mui/material';
 
 import { DashboardContent } from 'src/layouts/dashboard';
+import { renderIcon } from 'src/layouts/nav-config-dashboard';
 
-import { Iconify } from 'src/components/iconify';
+import CIPPhases from '../component/CIPPhases';
+import MultiSelector from '../component/MultiSelector';
 
 // ----------------------------------------------------------------------
 
+const options = ['1102', '1103', '1104', '1105'];
+
+const confluenceOption = ['112', '212', '232'];
+
 export function UserView() {
+  const [changeRequest, setChangeRequest] = useState('');
+  const [isSearched, setIsSearched] = useState(false);
+  const [jiraTickets, setJiraTickets] = useState<Array<string>>([]);
+  const [confluence, setConfluence] = useState<Array<string>>([]);
+
+  const handleSearch = () => {
+    if (!changeRequest.trim()) return;
+    setIsSearched(true);
+  };
   return (
     <DashboardContent>
+      {/* Header */}
       <Box
         sx={{
-          mb: 5,
+          mb: 4,
           display: 'flex',
           alignItems: 'center',
+          gap: 2,
         }}
       >
-        <Typography variant="h4" sx={{ flexGrow: 1 }}>
-          CIP Generator
-        </Typography>
-        <Button
-          variant="contained"
-          color="inherit"
-          startIcon={<Iconify icon="mingcute:add-line" />}
-        >
-          New user
-        </Button>
+        {renderIcon('navbar/script-gen', 'h-8 w-8', {
+          color: 'primary.main',
+        })}
+
+        <Box>
+          <Typography variant="h4" fontWeight={600}>
+            CIP Generator
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Automatically draft standardized Change Implementation Plans from Jira and Confluence
+            data.
+          </Typography>
+        </Box>
       </Box>
 
-      <Card />
+      {/* Main Card */}
+
+      <Card
+        elevation={2}
+        sx={{
+          borderRadius: 3,
+          p: 1,
+        }}
+      >
+        <CardContent sx={{ p: 4 }}>
+          {/* Header */}
+
+          <Box className="flex justify-between items-center mb-4">
+            <Box>
+              <Typography variant="h5" fontWeight={600}>
+                CIP Inputs
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Select required Jira and Confluence references
+              </Typography>
+            </Box>
+
+            <Box>
+              <Button
+                variant="contained"
+                disabled
+                sx={{
+                  whiteSpace: 'nowrap',
+                  height: '56px',
+                  px: 3,
+                  textTransform: 'none',
+                  fontWeight: 500,
+                }}
+              >
+                Generate CIP
+              </Button>
+            </Box>
+          </Box>
+
+          {/* Form Grid */}
+          <Grid container spacing={3}>
+            {/* CR Input */}
+            <Grid size={{ xs: 12, md: 8 }}>
+              <Typography variant="h6" mb={2}>
+                Add Change Request
+              </Typography>
+
+              <Box
+                display="flex"
+                gap={2}
+                alignItems="center"
+                flexDirection={{ xs: 'column', sm: 'row' }}
+              >
+                <TextField
+                  fullWidth
+                  label="Change Request"
+                  placeholder="Enter Change Request ID (e.g. CR-1234)"
+                  value={changeRequest}
+                  onChange={(e) => setChangeRequest(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleSearch();
+                  }}
+                />
+
+                <Button
+                  variant="contained"
+                  onClick={handleSearch}
+                  disabled={!changeRequest}
+                  sx={{
+                    whiteSpace: 'nowrap',
+                    height: '56px',
+                    px: 3,
+                    textTransform: 'none',
+                    fontWeight: 500,
+                  }}
+                >
+                  Search
+                </Button>
+              </Box>
+            </Grid>
+
+            {isSearched && (
+              <>
+                <Grid size={{ xs: 12 }} sx={{ mt: 2 }}>
+                  <Divider />
+                </Grid>
+
+                {/* JIRA Selector */}
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <MultiSelector
+                    label="Select JIRA Ticket"
+                    options={options}
+                    value={jiraTickets}
+                    onChange={setJiraTickets}
+                    placeholder="Choose JIRA Ticket..."
+                  />
+                </Grid>
+
+                {/* Confluence Selector */}
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <MultiSelector
+                    label="Select Confluence Id"
+                    options={confluenceOption}
+                    value={confluence}
+                    onChange={setConfluence}
+                    placeholder="Choose Confluence Id..."
+                  />
+                </Grid>
+              </>
+            )}
+          </Grid>
+        </CardContent>
+      </Card>
+
+      <Box sx={{ mt: 4 }}>
+        <CIPPhases />
+      </Box>
     </DashboardContent>
   );
 }
